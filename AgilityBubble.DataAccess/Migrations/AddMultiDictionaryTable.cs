@@ -9,6 +9,7 @@ namespace AgilityBubble.DataAccess.Migrations
         {
             Create.Table("MultiDictionary")
                 .WithColumn("MultiDictionaryID").AsInt64().PrimaryKey()
+                .WithColumn("ParentMultiDictionaryID").AsInt64().Nullable()
                 .WithColumn("Code").AsString()
                 .WithColumn("Description").AsString()
                 .WithColumn("IsSystem").AsBoolean();

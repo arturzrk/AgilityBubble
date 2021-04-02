@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AgilityBubble.Logic.Entities.Exceptions;
 using AutoFixture;
 using FluentAssertions;
@@ -25,36 +26,44 @@ namespace AgilityBubble.Test
 
         [Theory]
         [AutoMockData]
-        public void Given_NoParent_When_InsertLine_Returns_MultiDictionary_WithLineInserted(MultiDictionaryLine lineToInsert)
+        public void Given_NoParent_When_InsertLine_Returns_MultiDictionary_WithLineInserted(MultiDictionary lineToInsert)
         {
             _sut.InsertLine(lineToInsert);
-            var result = _sut.GetLine(lineToInsert.Id);
 
-            result.Should().Be(lineToInsert);
+            _sut.Lines[lineToInsert.Code].Should().Be(lineToInsert);
         }
 
         [Theory]
         [AutoMockData]
-        public void Given_CorrectParent_When_InsertLine_LineInsertedInTheParentCollection(MultiDictionaryLine lineToInsert,
-            MultiDictionaryLine parentLine)
+        public void Given_CorrectParent_When_InsertLine_LineInsertedInTheParentCollection(MultiDictionary lineToInsert,
+            MultiDictionary parentLine)
         {
             _sut.InsertLine(parentLine);
             _sut.InsertLine(lineToInsert, parentLine);
 
-            var result = _sut.GetLine(parentLine.Id);
-
-            result.Should().Be(parentLine);
-            parentLine.Lines.Count.Should().Be(1);
-            parentLine.Lines[lineToInsert.Id].Should().Be(lineToInsert);
+            _sut.Lines[parentLine.Code].Lines[lineToInsert.Code].Should().Be(lineToInsert);
         }
 
         [Theory]
         [AutoMockData]
-        public void Given_ParentNotIn_When_InsertLine_InvalidParentExceptionIsThrown(MultiDictionaryLine lineToInsert,
-            MultiDictionaryLine parentLine)
+        public void Given_ParentNotIn_When_InsertLine_InvalidParentExceptionIsThrown(MultiDictionary lineToInsert,
+            MultiDictionary parentLine)
         {
             Action action = () =>_sut.InsertLine(lineToInsert,parentLine);
             action.Should().Throw<InvalidParentMultiDictionaryException>();
+        }
+
+        [Theory]
+        [AutoMockData]
+        public void Given_3Levels_When_InsertLine_LineProperlyInserted(MultiDictionary level0Line,
+            MultiDictionary level1Line, MultiDictionary level2Line)
+        {
+            _sut.InsertLine(level0Line);
+            _sut.InsertLine(level1Line, level0Line);
+            _sut.InsertLine(level2Line, level1Line);
+
+            var result = _sut.Lines[level0Line.Code].Lines[level1Line.Code].Lines[level2Line.Code];
+            result.Should().Be(level2Line);
         }
 
         [Fact]

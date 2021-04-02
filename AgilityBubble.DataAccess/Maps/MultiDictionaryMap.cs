@@ -11,6 +11,8 @@ namespace AgilityBubble.DataAccess
             Map(x => x.Code);
             Map(x => x.Description);
             Map(x => x.IsSystem);
+            HasMany(x => x.Lines).KeyColumn("ParentMultiDictionaryID")
+                .Cascade.All().AsMap(x => x.Code).Not.LazyLoad().Fetch.Join();
         }
     }
 }

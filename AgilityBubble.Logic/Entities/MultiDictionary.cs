@@ -9,7 +9,7 @@ namespace AgilityBubble.Logic
         public virtual string Code { get; protected set; }
         public virtual string Description { get; protected set; }
         public virtual bool IsSystem { get; protected set; }
-        public virtual IDictionary<long, MultiDictionaryLine> Lines { get; protected set; }
+        public virtual IDictionary<string, MultiDictionary> Lines { get; protected set; }
 
         protected MultiDictionary()
         {
@@ -20,28 +20,37 @@ namespace AgilityBubble.Logic
             Code = code;
             Description = description;
             IsSystem = isSystem;
-            Lines = new Dictionary<long, MultiDictionaryLine>();
+            Lines = new Dictionary<string, MultiDictionary>();
         }
 
-        public virtual void InsertLine(MultiDictionaryLine lineToInsert, MultiDictionaryLine parentLine = null)
+        public virtual void InsertLine(MultiDictionary lineToInsert, MultiDictionary parentLine = null)
         {
             if (lineToInsert == null)
                 throw new ArgumentNullException();
             if(parentLine == null)
             {
-                Lines.Add(lineToInsert.Id, lineToInsert);
+                Lines.Add(lineToInsert.Code, lineToInsert);
             }
             else
             {
-                if (!Lines.ContainsKey(parentLine.Id))
+                var parent = FindByCode(parentLine.Code);
+                if (parent == null)
                     throw new InvalidParentMultiDictionaryException();
-                Lines[parentLine.Id].Lines.Add(lineToInsert.Id, lineToInsert);
+                parent.InsertLine(lineToInsert);
             }
         }
 
-        public virtual MultiDictionaryLine GetLine(long lineId)
+        public virtual MultiDictionary FindByCode(string code)
         {
-            return Lines[lineId];
+            if (Lines.ContainsKey(code))
+                return Lines[code];
+            foreach (var dictionary in Lines.Values)
+            {
+                var result = dictionary.FindByCode(code);
+                if (result != null)
+                    return result;
+            }
+            return null;
         }
 
         public virtual void ChangeCodeTo(string newCode)

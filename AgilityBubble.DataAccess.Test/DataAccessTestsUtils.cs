@@ -32,7 +32,7 @@ namespace AgilityBubble.DataAccess.Test
 
         internal void CreateTestData()
         {
-            ExecuteNonQuery(String.Empty,@"insert into dbo.MultiDictionary values(1, 'First', 'First dictionary', 0)");
+            ExecuteNonQuery(String.Empty,@"insert into dbo.MultiDictionary values(1, 0, 'First', 'First dictionary', 0)");
         }
 
         private void ExecuteNonQuery(string databaseName,string commandText)

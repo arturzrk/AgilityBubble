@@ -11,7 +11,7 @@ namespace AgilityBubble.DataAccess.Migrations
                 .WithColumn("EntityName").AsString(100).NotNullable().PrimaryKey()
                 .WithColumn("NextHigh").AsInt64().NotNullable();
 
-            Insert.IntoTable("Ids").Row(new { EntityName =  "MultiDictionary", NextHigh = 1});
+            Insert.IntoTable("Ids").Row(new { EntityName =  "MultiDictionary", NextHigh = 10});
         }
 
         public override void Down()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AgilityBubble.Logic;
+﻿using AgilityBubble.Logic;
 using AutoFixture;
 using FluentAssertions;
 using Xunit;
@@ -16,7 +11,7 @@ namespace AgilityBubble.Test
         public void AutoFixtureCreatesComplexTypesWithProperties()
         {
             var fixture = new Fixture();
-            var mockedLine = fixture.Create<MultiDictionaryLine>();
+            var mockedLine = fixture.Create<MultiDictionary>();
 
             mockedLine.Code.Should().NotBeNullOrEmpty();
         }

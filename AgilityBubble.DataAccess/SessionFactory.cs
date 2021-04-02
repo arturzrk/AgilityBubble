@@ -63,13 +63,5 @@ namespace AgilityBubble.Logic
                 instance.GeneratedBy.HiLo("[dbo].[Ids]", "NextHigh", "9", "EntityName = '" + instance.EntityType.Name + "'");
             }
         }
-
-        public class UUIDConvention : IIdConvention
-        {
-            public void Apply(IIdentityInstance instance)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
     }
 }
